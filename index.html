@@ -1,0 +1,2140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxx - Rocha Edition</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #dc2626;
+            --primary-dark: #991b1b;
+            --secondary: #fbbf24;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --bg-dark: #0a0a0a;
+            --bg-darker: #050505;
+            --bg-card: #1a1a1a;
+            --text-light: #f5f5f5;
+            --text-muted: #a0a0a0;
+            --border: #2a2a2a;
+            --shadow: 0 10px 40px rgba(220, 38, 38, 0.15);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --glow: 0 0 20px rgba(220, 38, 38, 0.3);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-darker);
+            color: var(--text-light);
+            transition: all 0.3s ease;
+        }
+
+        /* Animações */
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(20px); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(220, 38, 38, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(220, 38, 38, 0.6); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        /* Login Screen */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--bg-darker) 0%, var(--bg-dark) 100%);
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.6s ease;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(220, 38, 38, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            top: -250px;
+            right: -250px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .login-wrapper {
+            display: flex;
+            gap: 40px;
+            width: 100%;
+            max-width: 1000px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-hero {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            color: var(--text-light);
+            animation: slideInLeft 0.8s ease;
+        }
+
+        .login-title {
+            font-size: 42px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .login-subtitle {
+            font-size: 16px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .login-features {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: var(--text-muted);
+            animation: slideInLeft 0.8s ease;
+            animation-fill-mode: both;
+        }
+
+        .feature-item:nth-child(1) { animation-delay: 0.1s; }
+        .feature-item:nth-child(2) { animation-delay: 0.2s; }
+        .feature-item:nth-child(3) { animation-delay: 0.3s; }
+
+        .feature-icon {
+            font-size: 20px;
+        }
+
+        .login-box {
+            background: linear-gradient(135deg, var(--bg-card) 0%, #1f1f1f 100%);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            width: 100%;
+            max-width: 420px;
+            animation: slideInRight 0.8s ease;
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            flex: 0 0 auto;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: scaleIn 0.6s ease;
+        }
+
+        .login-logo-container {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 15px;
+            background: transparent;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(220, 38, 38, 0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .login-logo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .login-box h2 {
+            color: var(--text-light);
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .login-box-subtitle {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .login-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 30px;
+            background: rgba(220, 38, 38, 0.1);
+            border-radius: 10px;
+            padding: 4px;
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            animation: slideInDown 0.6s ease;
+        }
+
+        .login-tab {
+            flex: 1;
+            padding: 12px 16px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .login-tab:hover {
+            color: var(--text-light);
+            background: rgba(220, 38, 38, 0.05);
+        }
+
+        .login-tab.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+        }
+
+        .tab-icon {
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+            animation: slideInUp 0.6s ease;
+            animation-fill-mode: both;
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--text-light);
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-light);
+        }
+
+        .form-group input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2), var(--glow);
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 8px;
+            box-shadow: 0 8px 20px rgba(220, 38, 38, 0.3);
+            position: relative;
+            overflow: hidden;
+            animation: slideInUp 0.6s ease;
+            animation-fill-mode: both;
+            animation-delay: 0.3s;
+        }
+
+        .login-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .login-btn:hover::before {
+            left: 100%;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(220, 38, 38, 0.4);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .login-hint {
+            margin-top: 20px;
+            padding: 12px;
+            background: rgba(220, 38, 38, 0.1);
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            border-radius: 8px;
+            font-size: 11px;
+            color: var(--text-muted);
+            animation: slideInUp 0.6s ease;
+            animation-fill-mode: both;
+            animation-delay: 0.4s;
+        }
+
+        .login-hint strong {
+            color: var(--secondary);
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .hint-item {
+            margin: 3px 0;
+            padding-left: 16px;
+        }
+
+        /* Main App */
+        .app-container {
+            display: flex;
+            height: 100vh;
+            background: var(--bg-darker);
+            animation: fadeIn 0.6s ease;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-card);
+            border-right: 1px solid var(--border);
+            padding: 16px 12px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            animation: slideInLeft 0.6s ease;
+        }
+
+        .sidebar-logo {
+            font-size: 28px;
+            font-weight: 800;
+            padding: 16px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            animation: slideInDown 0.6s ease;
+        }
+
+        .nav-section {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            animation: slideInLeft 0.6s ease;
+            animation-fill-mode: both;
+            animation-delay: 0.1s;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            background: transparent;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.3s;
+            text-align: left;
+        }
+
+        .nav-link:hover {
+            background: rgba(220, 38, 38, 0.1);
+            color: var(--secondary);
+            transform: translateX(4px);
+        }
+
+        .nav-link.active {
+            background: rgba(220, 38, 38, 0.2);
+            color: var(--secondary);
+            box-shadow: inset 0 0 12px rgba(220, 38, 38, 0.2);
+        }
+
+        .nav-icon {
+            font-size: 20px;
+            width: 24px;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            animation: slideInLeft 0.6s ease;
+            animation-fill-mode: both;
+            animation-delay: 0.2s;
+        }
+
+        .user-mini-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(220, 38, 38, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            transition: all 0.3s;
+        }
+
+        .user-mini-card:hover {
+            background: rgba(220, 38, 38, 0.15);
+            transform: scale(1.02);
+        }
+
+        .user-mini-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .user-mini-info {
+            flex: 1;
+        }
+
+        .user-mini-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .user-mini-role {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .btn-logout {
+            padding: 10px 16px;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: var(--text-light);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-logout:hover {
+            background: rgba(239, 68, 68, 0.25);
+            color: var(--danger);
+            transform: scale(1.02);
+        }
+
+        /* Main Content */
+        .main-feed {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: slideInRight 0.6s ease;
+        }
+
+        .feed-header {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .feed-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            animation: slideInDown 0.6s ease;
+        }
+
+        .feed-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+        }
+
+        /* Feed Posts */
+        .feed-posts {
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .post-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            animation: slideInUp 0.4s ease;
+            transition: all 0.3s;
+        }
+
+        .post-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 8px 24px rgba(220, 38, 38, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .post-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .post-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .post-author:hover .post-avatar {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+        }
+
+        .post-author-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .post-author-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .post-time {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .post-menu {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 18px;
+            padding: 4px 8px;
+            transition: all 0.3s;
+        }
+
+        .post-menu:hover {
+            color: var(--primary);
+            transform: scale(1.2);
+        }
+
+        .post-content {
+            padding: 16px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-light);
+            word-break: break-word;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 0;
+            padding: 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 12px;
+            background: none;
+            border: none;
+            border-right: 1px solid var(--border);
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .action-btn:last-child {
+            border-right: none;
+        }
+
+        .action-btn:hover {
+            background: rgba(220, 38, 38, 0.1);
+            color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .action-btn.liked {
+            color: var(--danger);
+            animation: pulse 0.4s ease;
+        }
+
+        .post-stats {
+            padding: 12px 16px;
+            border-top: 1px solid var(--border);
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            gap: 16px;
+        }
+
+        /* Comments Section */
+        .comments-section {
+            padding: 16px;
+            background: rgba(220, 38, 38, 0.05);
+            border-top: 1px solid var(--border);
+            max-height: 300px;
+            overflow-y: auto;
+            animation: slideInUp 0.3s ease;
+        }
+
+        .comment-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+            animation: slideInUp 0.3s ease;
+        }
+
+        .comment-avatar {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+
+        .comment-content {
+            flex: 1;
+        }
+
+        .comment-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+
+        .comment-author {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .comment-time {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        .comment-text {
+            font-size: 12px;
+            color: var(--text-light);
+            line-height: 1.4;
+        }
+
+        .comment-form {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            animation: slideInUp 0.3s ease;
+        }
+
+        .comment-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-light);
+            transition: all 0.3s;
+        }
+
+        .comment-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .comment-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.2);
+            transform: scale(1.02);
+        }
+
+        .comment-btn {
+            padding: 8px 12px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .comment-btn:hover {
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+            transform: scale(1.05);
+        }
+
+        /* Profile Section */
+        .profile-container {
+            max-width: 900px;
+            margin: 0 auto;
+            animation: slideInUp 0.4s ease;
+        }
+
+        .profile-header {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 32px;
+            display: flex;
+            gap: 32px;
+            align-items: flex-start;
+            transition: all 0.3s;
+        }
+
+        .profile-header:hover {
+            border-color: var(--primary);
+            box-shadow: 0 8px 24px rgba(220, 38, 38, 0.15);
+        }
+
+        .profile-avatar-large {
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 60px;
+            border: 4px solid var(--secondary);
+            flex-shrink: 0;
+            transition: all 0.3s;
+            animation: scaleIn 0.6s ease;
+        }
+
+        .profile-avatar-large:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 24px rgba(220, 38, 38, 0.3);
+        }
+
+        .profile-info {
+            flex: 1;
+            animation: slideInRight 0.6s ease;
+        }
+
+        .profile-username {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 8px;
+        }
+
+        .profile-role {
+            font-size: 14px;
+            color: var(--secondary);
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 32px;
+            margin-bottom: 16px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            transition: all 0.3s;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .profile-post-item {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.15) 0%, rgba(220, 38, 38, 0.05) 100%);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            overflow: hidden;
+            animation: scaleIn 0.4s ease;
+            animation-fill-mode: both;
+        }
+
+        .profile-post-item:nth-child(1) { animation-delay: 0s; }
+        .profile-post-item:nth-child(2) { animation-delay: 0.1s; }
+        .profile-post-item:nth-child(3) { animation-delay: 0.2s; }
+
+        .profile-post-item:hover {
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.25) 0%, rgba(220, 38, 38, 0.15) 100%);
+            border-color: var(--primary);
+            transform: scale(1.05);
+            box-shadow: 0 8px 24px rgba(220, 38, 38, 0.2);
+        }
+
+        .profile-post-text {
+            font-size: 12px;
+            color: var(--text-light);
+            line-height: 1.4;
+            word-break: break-word;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Users Grid */
+        .users-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .user-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            animation: scaleIn 0.4s ease;
+            animation-fill-mode: both;
+        }
+
+        .user-card:nth-child(1) { animation-delay: 0s; }
+        .user-card:nth-child(2) { animation-delay: 0.1s; }
+        .user-card:nth-child(3) { animation-delay: 0.2s; }
+        .user-card:nth-child(4) { animation-delay: 0.3s; }
+
+        .user-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 8px 24px rgba(220, 38, 38, 0.15);
+            transform: translateY(-8px);
+        }
+
+        .user-card.banned {
+            opacity: 0.6;
+            border-color: var(--danger);
+        }
+
+        .user-card-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 32px;
+            margin: 0 auto;
+            transition: all 0.3s;
+        }
+
+        .user-card:hover .user-card-avatar {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(220, 38, 38, 0.3);
+        }
+
+        .user-card-name {
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--text-light);
+        }
+
+        .user-card-role {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .user-card-posts {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-admin {
+            background: rgba(220, 38, 38, 0.2);
+            color: var(--secondary);
+        }
+
+        .badge-banned {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+
+        /* Admin Panel */
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            animation: slideInUp 0.4s ease;
+        }
+
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            border-left: 4px solid var(--primary);
+            transition: all 0.3s;
+            animation: slideInUp 0.4s ease;
+            animation-fill-mode: both;
+        }
+
+        .stat-card:nth-child(1) { animation-delay: 0s; }
+        .stat-card:nth-child(2) { animation-delay: 0.1s; }
+        .stat-card:nth-child(3) { animation-delay: 0.2s; }
+        .stat-card:nth-child(4) { animation-delay: 0.3s; }
+
+        .stat-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 8px 24px rgba(220, 38, 38, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .stat-card.posts {
+            border-left-color: var(--secondary);
+        }
+
+        .stat-card.banned {
+            border-left-color: var(--danger);
+        }
+
+        .stat-card.active {
+            border-left-color: var(--success);
+        }
+
+        .stat-card-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .stat-card-value {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .admin-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            animation: slideInUp 0.4s ease;
+            animation-fill-mode: both;
+            animation-delay: 0.4s;
+        }
+
+        .admin-section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .admin-users-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .admin-user-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background: rgba(220, 38, 38, 0.05);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+            animation: slideInUp 0.3s ease;
+        }
+
+        .admin-user-row:hover {
+            background: rgba(220, 38, 38, 0.1);
+            transform: translateX(4px);
+        }
+
+        .admin-user-row.banned {
+            opacity: 0.6;
+        }
+
+        .admin-user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .admin-user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .admin-user-row:hover .admin-user-avatar {
+            transform: scale(1.1);
+        }
+
+        .admin-user-details h4 {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 2px;
+        }
+
+        .admin-user-details p {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .admin-logs {
+            max-height: 400px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .log-item {
+            padding: 12px;
+            background: rgba(220, 38, 38, 0.05);
+            border-left: 3px solid var(--primary);
+            border-radius: 6px;
+            font-size: 12px;
+            transition: all 0.3s;
+            animation: slideInLeft 0.3s ease;
+        }
+
+        .log-item:hover {
+            background: rgba(220, 38, 38, 0.1);
+            transform: translateX(4px);
+        }
+
+        .log-time {
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .log-action {
+            color: var(--text-light);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+            animation: slideInUp 0.4s ease;
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-state-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 8px;
+        }
+
+        .empty-state-text {
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .login-wrapper {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .login-hero {
+                text-align: center;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .profile-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                flex-direction: row;
+                padding: 12px;
+                gap: 12px;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .sidebar-logo {
+                display: none;
+            }
+
+            .nav-section {
+                flex-direction: row;
+                gap: 4px;
+                flex: 1;
+            }
+
+            .nav-link {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+
+            .sidebar-bottom {
+                flex-direction: row;
+                gap: 8px;
+                padding-top: 0;
+                border-top: none;
+            }
+
+            .user-mini-card {
+                display: none;
+            }
+
+            .profile-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .users-container {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+
+            .admin-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-wrapper">
+            <div class="login-hero">
+                <h1 class="login-title">Fluxx</h1>
+                <p class="login-subtitle">Conecte-se com poder. Compartilhe com autoridade. Seja notado.</p>
+                <div class="login-features">
+                    <div class="feature-item">
+                        <span class="feature-icon">💬</span>
+                        <span>Compartilhe seus pensamentos</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">❤️</span>
+                        <span>Interaja com a comunidade</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">⚙️</span>
+                        <span>Gerencie com total controle</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="login-box">
+                <div class="login-header">
+                    <div class="login-logo-container">
+                        <img id="logoImg" class="login-logo-img" src="https://raw.githubusercontent.com/pedrinz00/minha-rede-social/main/logo.jpg" alt="Logo Fluxx">
+                    </div>
+                    <h2>Fluxx</h2>
+                    <p class="login-box-subtitle">Rocha Edition</p>
+                </div>
+
+                <div class="login-tabs">
+                    <button class="login-tab active" onclick="switchTab('user')">
+                        <span class="tab-icon">👤</span>
+                        <span>Usuário</span>
+                    </button>
+                    <button class="login-tab" onclick="switchTab('admin')">
+                        <span class="tab-icon">🛡️</span>
+                        <span>Administrador</span>
+                    </button>
+                </div>
+
+                <form id="userLoginForm" class="login-form-content">
+                    <div class="form-group">
+                        <label for="userUsername">Usuário</label>
+                        <input type="text" id="userUsername" placeholder="seu@usuario" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userPassword">Senha</label>
+                        <input type="password" id="userPassword" placeholder="sua senha" required>
+                    </div>
+                    <button type="submit" class="login-btn">🚀 Entrar</button>
+                </form>
+
+                <form id="adminLoginForm" class="login-form-content hidden">
+                    <div class="form-group">
+                        <label for="adminUsername">Usuário Admin</label>
+                        <input type="text" id="adminUsername" placeholder="seu@admin" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="adminPassword">Senha</label>
+                        <input type="password" id="adminPassword" placeholder="sua senha" required>
+                    </div>
+                    <button type="submit" class="login-btn">🛡️ Entrar como Admin</button>
+                </form>
+
+                <div class="login-hint">
+                    <strong>💡 Contas de Teste:</strong>
+                    <div class="hint-item"><strong>Usuário:</strong> joao / 123</div>
+                    <div class="hint-item"><strong>Usuário:</strong> maria / 123</div>
+                    <div class="hint-item"><strong>Admin:</strong> pedro / brito</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="appScreen" class="app-container hidden">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-logo">Fluxx</div>
+            
+            <div class="nav-section">
+                <button class="nav-link active" onclick="showFeed()">
+                    <span class="nav-icon">📰</span>
+                    <span>Feed</span>
+                </button>
+                <button class="nav-link" onclick="showProfile()">
+                    <span class="nav-icon">👤</span>
+                    <span>Perfil</span>
+                </button>
+                <button class="nav-link" onclick="showUsers()">
+                    <span class="nav-icon">👥</span>
+                    <span>Usuários</span>
+                </button>
+                <button class="nav-link" id="adminBtn" onclick="showAdmin()" style="display: none;">
+                    <span class="nav-icon">⚙️</span>
+                    <span>Admin</span>
+                </button>
+            </div>
+
+            <div class="sidebar-bottom">
+                <div class="user-mini-card">
+                    <div class="user-mini-avatar" id="sidebarAvatar">P</div>
+                    <div class="user-mini-info">
+                        <div class="user-mini-name" id="sidebarUsername">Pedro</div>
+                        <div class="user-mini-role" id="sidebarRole">Admin</div>
+                    </div>
+                </div>
+                <button class="btn-logout" onclick="logout()">🚪 Sair</button>
+            </div>
+        </div>
+
+        <!-- Main Feed -->
+        <div class="main-feed">
+            <div class="feed-header">
+                <h1 id="pageTitle">Feed</h1>
+            </div>
+
+            <div class="feed-content">
+                <!-- Feed Section -->
+                <div id="feedSection">
+                    <div class="feed-posts">
+                        <!-- New Post Card -->
+                        <div class="post-card">
+                            <div class="post-header">
+                                <div class="post-author">
+                                    <div class="post-avatar" id="newPostAvatar">P</div>
+                                    <div class="post-author-info">
+                                        <div class="post-author-name" id="newPostName">Pedro</div>
+                                        <div class="post-time">Agora</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <textarea id="postText" style="width: 100%; padding: 16px; border: none; background: rgba(255,255,255,0.05); color: var(--text-light); font-family: inherit; font-size: 14px; resize: vertical; min-height: 80px;" placeholder="O que está em sua mente?" maxlength="500"></textarea>
+                            <div style="display: flex; gap: 10px; padding: 12px 16px; border-top: 1px solid var(--border);">
+                                <button onclick="clearPostForm()" style="flex: 1; padding: 8px; background: rgba(255,255,255,0.1); border: 1px solid var(--border); color: var(--text-light); border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">Cancelar</button>
+                                <button onclick="createPost()" style="flex: 1; padding: 8px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); border: none; color: white; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">Publicar</button>
+                            </div>
+                        </div>
+
+                        <!-- Posts Container -->
+                        <div id="postsContainer"></div>
+                    </div>
+                </div>
+
+                <!-- Profile Section -->
+                <div id="profileSection" class="hidden">
+                    <div class="profile-container">
+                        <div class="profile-header">
+                            <div class="profile-avatar-large" id="profileAvatar">P</div>
+                            <div class="profile-info">
+                                <div class="profile-username" id="profileUsername">pedro</div>
+                                <div class="profile-role" id="profileRole">Administrador</div>
+                                <div class="profile-stats">
+                                    <div class="stat-item">
+                                        <div class="stat-number" id="profilePostCount">0</div>
+                                        <div class="stat-label">Posts</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-number" id="profileLikeCount">0</div>
+                                        <div class="stat-label">Curtidas</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-number" id="profileCommentCount">0</div>
+                                        <div class="stat-label">Comentários</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h2 style="margin-bottom: 16px; font-size: 16px; font-weight: 700;">Posts</h2>
+                        <div class="profile-grid" id="profileGrid"></div>
+                    </div>
+                </div>
+
+                <!-- Users Section -->
+                <div id="usersSection" class="hidden">
+                    <div class="users-container" id="usersContainer"></div>
+                </div>
+
+                <!-- Admin Section -->
+                <div id="adminSection" class="hidden">
+                    <div class="admin-container">
+                        <h1 style="margin-bottom: 24px; font-size: 24px; font-weight: 700;">⚙️ Painel de Administração</h1>
+
+                        <div class="admin-stats">
+                            <div class="stat-card users">
+                                <div class="stat-card-label">Total de Usuários</div>
+                                <div class="stat-card-value" id="statUsers">0</div>
+                            </div>
+                            <div class="stat-card posts">
+                                <div class="stat-card-label">Total de Posts</div>
+                                <div class="stat-card-value" id="statPosts">0</div>
+                            </div>
+                            <div class="stat-card banned">
+                                <div class="stat-card-label">Usuários Banidos</div>
+                                <div class="stat-card-value" id="statBanned">0</div>
+                            </div>
+                            <div class="stat-card active">
+                                <div class="stat-card-label">Usuários Ativos</div>
+                                <div class="stat-card-value" id="statActive">0</div>
+                            </div>
+                        </div>
+
+                        <div class="admin-section">
+                            <div class="admin-section-title">👥 Gerenciar Usuários</div>
+                            <div class="admin-users-list" id="adminUsersList"></div>
+                        </div>
+
+                        <div class="admin-section">
+                            <div class="admin-section-title">📋 Log de Atividades</div>
+                            <div class="admin-logs" id="adminLogs"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== DATA MANAGEMENT ====================
+        const STORAGE_KEY = 'fluxx_data';
+        const LOGS_KEY = 'fluxx_logs';
+
+        let currentUser = null;
+        let users = [];
+        let posts = [];
+        let likes = {};
+        let comments = {};
+        let logs = [];
+
+        document.getElementById('userLoginForm').addEventListener('submit', (e) => login(e, 'user'));
+        document.getElementById('adminLoginForm').addEventListener('submit', (e) => login(e, 'admin'));
+        loadDataFromStorage();
+        initializeDefaultData();
+
+        function switchTab(tab) {
+            const tabs = document.querySelectorAll('.login-tab');
+            const forms = document.querySelectorAll('.login-form-content');
+            tabs.forEach(t => t.classList.remove('active'));
+            forms.forEach(f => f.classList.add('hidden'));
+            if (tab === 'user') {
+                tabs[0].classList.add('active');
+                document.getElementById('userLoginForm').classList.remove('hidden');
+            } else {
+                tabs[1].classList.add('active');
+                document.getElementById('adminLoginForm').classList.remove('hidden');
+            }
+        }
+
+        function loadDataFromStorage() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+                const data = JSON.parse(stored);
+                users = data.users || [];
+                posts = data.posts || [];
+                likes = data.likes || {};
+                comments = data.comments || {};
+            }
+            const storedLogs = localStorage.getItem(LOGS_KEY);
+            if (storedLogs) logs = JSON.parse(storedLogs);
+        }
+
+        function saveDataToStorage() {
+            const data = { users, posts, likes, comments };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            localStorage.setItem(LOGS_KEY, JSON.stringify(logs));
+        }
+
+        function initializeDefaultData() {
+            if (users.length === 0) {
+                users = [
+                    { id: 1, username: 'pedro', password: 'brito', role: 'admin', banned: false, joinDate: new Date().toISOString() },
+                    { id: 2, username: 'joao', password: '123', role: 'user', banned: false, joinDate: new Date().toISOString() },
+                    { id: 3, username: 'maria', password: '123', role: 'user', banned: false, joinDate: new Date().toISOString() },
+                    { id: 4, username: 'ana', password: '123', role: 'user', banned: false, joinDate: new Date().toISOString() }
+                ];
+                saveDataToStorage();
+            }
+        }
+
+        function addLog(action) {
+            const log = { timestamp: new Date(), user: currentUser.username, action };
+            logs.unshift(log);
+            if (logs.length > 100) logs.pop();
+            saveDataToStorage();
+        }
+
+        // ==================== AUTHENTICATION ====================
+        function login(e, type) {
+            e.preventDefault();
+            let username, password;
+            if (type === 'user') {
+                username = document.getElementById('userUsername').value;
+                password = document.getElementById('userPassword').value;
+            } else {
+                username = document.getElementById('adminUsername').value;
+                password = document.getElementById('adminPassword').value;
+            }
+
+            const user = users.find(u => u.username === username && u.password === password);
+            if (user) {
+                if (user.banned) {
+                    alert('❌ Sua conta foi banida!');
+                    return;
+                }
+                if (type === 'admin' && user.role !== 'admin') {
+                    alert('❌ Acesso de administrador negado!');
+                    return;
+                }
+                if (type === 'user' && user.role === 'admin') {
+                    alert('❌ Use a aba de Administrador para fazer login!');
+                    return;
+                }
+
+                currentUser = user;
+                addLog(`${username} fez login`);
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('appScreen').classList.remove('hidden');
+                updateUserInfo();
+                showFeed();
+            } else {
+                alert('❌ Usuário ou senha inválidos!');
+            }
+        }
+
+        function logout() {
+            if (currentUser) addLog(`${currentUser.username} fez logout`);
+            currentUser = null;
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('appScreen').classList.add('hidden');
+            document.getElementById('userLoginForm').reset();
+            document.getElementById('adminLoginForm').reset();
+            switchTab('user');
+        }
+
+        // ==================== UI UPDATES ====================
+        function updateUserInfo() {
+            const avatar = currentUser.username.charAt(0).toUpperCase();
+            document.getElementById('sidebarUsername').textContent = currentUser.username;
+            document.getElementById('sidebarRole').textContent = currentUser.role === 'admin' ? 'Administrador' : 'Usuário';
+            document.getElementById('sidebarAvatar').textContent = avatar;
+            document.getElementById('newPostAvatar').textContent = avatar;
+            document.getElementById('newPostName').textContent = currentUser.username;
+            if (currentUser.role === 'admin') {
+                document.getElementById('adminBtn').style.display = 'flex';
+            }
+        }
+
+        function setActiveNav(index) {
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach((link, i) => {
+                if (i === index) link.classList.add('active');
+                else link.classList.remove('active');
+            });
+        }
+
+        function hideAllSections() {
+            document.getElementById('feedSection').classList.add('hidden');
+            document.getElementById('profileSection').classList.add('hidden');
+            document.getElementById('usersSection').classList.add('hidden');
+            document.getElementById('adminSection').classList.add('hidden');
+        }
+
+        // ==================== FEED ====================
+        function createPost() {
+            const text = document.getElementById('postText').value.trim();
+            if (!text) {
+                alert('📝 Digite algo para publicar!');
+                return;
+            }
+
+            const post = {
+                id: Date.now(),
+                authorId: currentUser.id,
+                author: currentUser.username,
+                content: text,
+                timestamp: new Date().toISOString(),
+                likes: 0
+            };
+
+            posts.unshift(post);
+            comments[post.id] = [];
+            addLog(`${currentUser.username} criou um novo post`);
+            saveDataToStorage();
+            document.getElementById('postText').value = '';
+            renderPosts();
+        }
+
+        function clearPostForm() {
+            document.getElementById('postText').value = '';
+        }
+
+        function renderPosts() {
+            const container = document.getElementById('postsContainer');
+            container.innerHTML = '';
+
+            if (posts.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><div class="empty-state-title">Nenhum post ainda</div><div class="empty-state-text">Seja o primeiro a publicar algo!</div></div>';
+                return;
+            }
+
+            posts.forEach(post => {
+                const author = users.find(u => u.id === post.authorId);
+                if (author && author.banned) return;
+
+                const postEl = document.createElement('div');
+                postEl.className = 'post-card';
+                
+                const likeKey = `${post.id}-${currentUser.id}`;
+                const isLiked = likes[likeKey];
+                const postComments = comments[post.id] || [];
+
+                postEl.innerHTML = `
+                    <div class="post-header">
+                        <div class="post-author">
+                            <div class="post-avatar">${author.username.charAt(0).toUpperCase()}</div>
+                            <div class="post-author-info">
+                                <div class="post-author-name">${author.username}</div>
+                                <div class="post-time">${formatTime(new Date(post.timestamp))}</div>
+                            </div>
+                        </div>
+                        ${currentUser.role === 'admin' ? `<button class="post-menu" onclick="deletePost(${post.id})">⋯</button>` : ''}
+                    </div>
+                    <div class="post-content">${escapeHtml(post.content)}</div>
+                    <div class="post-stats">
+                        <span>${post.likes} curtida${post.likes !== 1 ? 's' : ''}</span>
+                        <span>${postComments.length} comentário${postComments.length !== 1 ? 's' : ''}</span>
+                    </div>
+                    <div class="post-actions">
+                        <button class="action-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike(${post.id})">
+                            ❤️ ${isLiked ? 'Curtido' : 'Curtir'}
+                        </button>
+                        <button class="action-btn" onclick="toggleComments(${post.id})">
+                            💬 Comentar
+                        </button>
+                    </div>
+                    <div id="comments-${post.id}" class="comments-section hidden">
+                        <div id="comments-list-${post.id}"></div>
+                        <div class="comment-form">
+                            <input type="text" class="comment-input" id="comment-input-${post.id}" placeholder="Escreva um comentário...">
+                            <button class="comment-btn" onclick="addComment(${post.id})">Enviar</button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(postEl);
+                renderComments(post.id);
+            });
+        }
+
+        function toggleComments(postId) {
+            const section = document.getElementById(`comments-${postId}`);
+            section.classList.toggle('hidden');
+        }
+
+        function addComment(postId) {
+            const input = document.getElementById(`comment-input-${postId}`);
+            const text = input.value.trim();
+            if (!text) return;
+
+            if (!comments[postId]) comments[postId] = [];
+            comments[postId].push({
+                id: Date.now(),
+                authorId: currentUser.id,
+                author: currentUser.username,
+                content: text,
+                timestamp: new Date().toISOString()
+            });
+
+            input.value = '';
+            addLog(`${currentUser.username} comentou em um post`);
+            saveDataToStorage();
+            renderComments(postId);
+        }
+
+        function renderComments(postId) {
+            const listContainer = document.getElementById(`comments-list-${postId}`);
+            const postComments = comments[postId] || [];
+            listContainer.innerHTML = '';
+            postComments.forEach(comment => {
+                const commentEl = document.createElement('div');
+                commentEl.className = 'comment-item';
+                commentEl.innerHTML = `
+                    <div class="comment-avatar">${comment.author.charAt(0).toUpperCase()}</div>
+                    <div class="comment-content">
+                        <div class="comment-header">
+                            <span class="comment-author">${comment.author}</span>
+                            <span class="comment-time">${formatTime(new Date(comment.timestamp))}</span>
+                        </div>
+                        <div class="comment-text">${escapeHtml(comment.content)}</div>
+                    </div>
+                `;
+                listContainer.appendChild(commentEl);
+            });
+        }
+
+        function toggleLike(postId) {
+            const post = posts.find(p => p.id === postId);
+            const likeKey = `${postId}-${currentUser.id}`;
+
+            if (likes[likeKey]) {
+                delete likes[likeKey];
+                post.likes--;
+                addLog(`${currentUser.username} descurtiu um post`);
+            } else {
+                likes[likeKey] = true;
+                post.likes++;
+                addLog(`${currentUser.username} curtiu um post`);
+            }
+
+            saveDataToStorage();
+            renderPosts();
+        }
+
+        function deletePost(postId) {
+            if (confirm('Tem certeza que deseja deletar este post?')) {
+                posts = posts.filter(p => p.id !== postId);
+                delete comments[postId];
+                addLog(`${currentUser.username} deletou um post`);
+                saveDataToStorage();
+                renderPosts();
+            }
+        }
+
+        function showFeed() {
+            setActiveNav(0);
+            document.getElementById('pageTitle').textContent = '📰 Feed';
+            hideAllSections();
+            document.getElementById('feedSection').classList.remove('hidden');
+            renderPosts();
+        }
+
+        // ==================== PROFILE ====================
+        function showProfile() {
+            setActiveNav(1);
+            document.getElementById('pageTitle').textContent = '👤 Perfil';
+            hideAllSections();
+            document.getElementById('profileSection').classList.remove('hidden');
+            renderProfile();
+        }
+
+        function renderProfile() {
+            const avatar = currentUser.username.charAt(0).toUpperCase();
+            document.getElementById('profileAvatar').textContent = avatar;
+            document.getElementById('profileUsername').textContent = currentUser.username;
+            document.getElementById('profileRole').textContent = currentUser.role === 'admin' ? 'Administrador' : 'Usuário';
+            
+            const userPosts = posts.filter(p => p.authorId === currentUser.id);
+            document.getElementById('profilePostCount').textContent = userPosts.length;
+            
+            let totalLikes = 0;
+            userPosts.forEach(p => totalLikes += p.likes);
+            document.getElementById('profileLikeCount').textContent = totalLikes;
+
+            let totalComments = 0;
+            userPosts.forEach(p => totalComments += (comments[p.id] || []).length);
+            document.getElementById('profileCommentCount').textContent = totalComments;
+
+            const grid = document.getElementById('profileGrid');
+            grid.innerHTML = '';
+            userPosts.forEach(post => {
+                const item = document.createElement('div');
+                item.className = 'profile-post-item';
+                item.innerHTML = `<div class="profile-post-text">${escapeHtml(post.content)}</div>`;
+                grid.appendChild(item);
+            });
+
+            if (userPosts.length === 0) {
+                grid.innerHTML = '<div class="empty-state" style="grid-column: 1/-1;"><div class="empty-state-icon">📝</div><div class="empty-state-title">Nenhum post ainda</div></div>';
+            }
+        }
+
+        // ==================== USERS ====================
+        function showUsers() {
+            setActiveNav(2);
+            document.getElementById('pageTitle').textContent = '👥 Usuários';
+            hideAllSections();
+            document.getElementById('usersSection').classList.remove('hidden');
+            renderUsers();
+        }
+
+        function renderUsers() {
+            const container = document.getElementById('usersContainer');
+            container.innerHTML = '';
+
+            users.forEach(user => {
+                if (user.id === currentUser.id) return;
+
+                const userEl = document.createElement('div');
+                userEl.className = `user-card ${user.banned ? 'banned' : ''}`;
+                
+                const userPosts = posts.filter(p => p.authorId === user.id);
+                const avatar = user.username.charAt(0).toUpperCase();
+
+                userEl.innerHTML = `
+                    <div class="user-card-avatar">${avatar}</div>
+                    <div class="user-card-name">${user.username}</div>
+                    <div class="user-card-role">${user.role === 'admin' ? 'Administrador' : 'Usuário'}</div>
+                    ${user.role === 'admin' ? '<span class="badge badge-admin">ADMIN</span>' : ''}
+                    ${user.banned ? '<span class="badge badge-banned">BANIDO</span>' : ''}
+                    <div class="user-card-posts">${userPosts.length} posts</div>
+                `;
+                container.appendChild(userEl);
+            });
+        }
+
+        // ==================== ADMIN ====================
+        function showAdmin() {
+            if (currentUser.role !== 'admin') {
+                alert('❌ Acesso negado!');
+                return;
+            }
+
+            setActiveNav(3);
+            document.getElementById('pageTitle').textContent = '⚙️ Admin';
+            hideAllSections();
+            document.getElementById('adminSection').classList.remove('hidden');
+            renderAdmin();
+        }
+
+        function renderAdmin() {
+            const bannedCount = users.filter(u => u.banned).length;
+            const activeCount = users.length - bannedCount;
+
+            document.getElementById('statUsers').textContent = users.length;
+            document.getElementById('statPosts').textContent = posts.length;
+            document.getElementById('statBanned').textContent = bannedCount;
+            document.getElementById('statActive').textContent = activeCount;
+
+            const container = document.getElementById('adminUsersList');
+            container.innerHTML = '';
+
+            users.forEach(user => {
+                if (user.id === currentUser.id) return;
+
+                const userEl = document.createElement('div');
+                userEl.className = `admin-user-row ${user.banned ? 'banned' : ''}`;
+                
+                const userPosts = posts.filter(p => p.authorId === user.id);
+                const avatar = user.username.charAt(0).toUpperCase();
+
+                userEl.innerHTML = `
+                    <div class="admin-user-info">
+                        <div class="admin-user-avatar">${avatar}</div>
+                        <div class="admin-user-details">
+                            <h4>${user.username} ${user.role === 'admin' ? '<span class="badge badge-admin">ADMIN</span>' : ''}</h4>
+                            <p>${user.role === 'admin' ? 'Administrador' : 'Usuário'} • ${userPosts.length} posts • ${user.banned ? '🚫 BANIDO' : '✅ Ativo'}</p>
+                        </div>
+                    </div>
+                    <button class="btn ${user.banned ? 'btn-success' : 'btn-danger'}" onclick="toggleBan(${user.id})">
+                        ${user.banned ? '✅ Desbanir' : '🚫 Banir'}
+                    </button>
+                `;
+                container.appendChild(userEl);
+            });
+
+            renderLogs();
+        }
+
+        function renderLogs() {
+            const container = document.getElementById('adminLogs');
+            container.innerHTML = '';
+
+            if (logs.length === 0) {
+                container.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 20px;">Nenhum log registrado</div>';
+                return;
+            }
+
+            logs.slice(0, 50).forEach(log => {
+                const logEl = document.createElement('div');
+                logEl.className = 'log-item';
+                logEl.innerHTML = `
+                    <div class="log-time">${formatTime(new Date(log.timestamp))}</div>
+                    <div class="log-action"><strong>${log.user}</strong>: ${log.action}</div>
+                `;
+                container.appendChild(logEl);
+            });
+        }
+
+        function toggleBan(userId) {
+            const user = users.find(u => u.id === userId);
+            if (!user) return;
+
+            if (user.banned) {
+                user.banned = false;
+                addLog(`${currentUser.username} desbaniu ${user.username}`);
+                alert(`✅ ${user.username} foi desbanido!`);
+            } else {
+                user.banned = true;
+                addLog(`${currentUser.username} baniu ${user.username}`);
+                alert(`🚫 ${user.username} foi banido!`);
+                posts = posts.filter(p => p.authorId !== userId);
+            }
+
+            saveDataToStorage();
+            renderAdmin();
+        }
+
+        // ==================== UTILITIES ====================
+        function formatTime(date) {
+            const now = new Date();
+            const diff = now - date;
+            const seconds = Math.floor(diff / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const hours = Math.floor(minutes / 60);
+            const days = Math.floor(hours / 24);
+
+            if (seconds < 60) return 'agora';
+            if (minutes < 60) return `${minutes}m`;
+            if (hours < 24) return `${hours}h`;
+            if (days < 7) return `${days}d`;
+            return date.toLocaleDateString('pt-BR');
+        }
+
+        function escapeHtml(text) {
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+    </script>
+</body>
+</html>
