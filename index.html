@@ -1790,6 +1790,28 @@
             text-align: right;
             font-size: 11px;
         }
+
+        /* Hashtags */
+        .hashtag-link {
+            color: var(--primary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        .hashtag-link:hover {
+            background: rgba(220, 38, 38, 0.2);
+            text-decoration: underline;
+        }
+
+        .hashtag-badge:hover {
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.3) 0%, rgba(251, 191, 36, 0.2) 100%) !important;
+            border-color: var(--primary) !important;
+            transform: scale(1.05);
+        }
+
     </style>
 </head>
 <body>
@@ -1921,6 +1943,9 @@
             <div class="feed-content">
                 <!-- Feed Section -->
                 <div id="feedSection">
+                    <!-- Hashtags Widget -->
+                    <div id="hashtagsWidget" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 20px; animation: slideInUp 0.4s ease;"></div>
+                    
                     <div class="feed-posts">
                         <!-- New Post Card -->
                         <div class="post-card">
@@ -2292,7 +2317,7 @@
                         </div>
                         ${currentUser.role === 'admin' ? `<button class="post-menu" onclick="deletePost(${post.id})">⋯</button>` : ''}
                     </div>
-                    <div class="post-content">${escapeHtml(post.content)}</div>
+                    <div class="post-content" style="word-break: break-word;">${formatHashtags(escapeHtml(post.content))}</div>
                     <div class="post-stats">
                         <span>❤️ ${post.likes}</span>
                         <span>💬 ${postComments.length}</span>
@@ -2327,6 +2352,7 @@
                 container.appendChild(postEl);
                 renderComments(post.id);
             });
+            renderHashtagsWidget();
         }
 
         function toggleComments(postId) {
@@ -2399,6 +2425,55 @@
                 .map(([tag, count]) => ({ tag, count }));
         }
 
+        // ==================== HASHTAGS ====================
+        function formatHashtags(text) {
+            return text.replace(/#\w+/g, (match) => {
+                return `<span class="hashtag-link" onclick="searchHashtag('${match}')">${match}</span>`;
+            });
+        }
+
+        function getPopularHashtags(limit = 8) {
+            const hashtags = {};
+            posts.forEach(post => {
+                const matches = post.content.match(/#\w+/g);
+                if (matches) {
+                    matches.forEach(tag => {
+                        hashtags[tag] = (hashtags[tag] || 0) + 1;
+                    });
+                }
+            });
+            
+            return Object.entries(hashtags)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, limit)
+                .map(([tag, count]) => ({ tag, count }));
+        }
+
+        function renderHashtagsWidget() {
+            const container = document.getElementById('hashtagsWidget');
+            if (!container) return;
+            
+            const hashtags = getPopularHashtags(8);
+            
+            if (hashtags.length === 0) {
+                container.innerHTML = '<div style="padding: 16px; text-align: center; color: var(--text-muted); font-size: 12px;">Nenhuma hashtag ainda</div>';
+                return;
+            }
+
+            container.innerHTML = `
+                <div style="padding: 16px; border-bottom: 1px solid var(--border);">
+                    <h3 style="font-size: 14px; font-weight: 700; margin-bottom: 12px; color: var(--text-light);">🏷️ Hashtags Populares</h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        ${hashtags.map(item => `
+                            <button class="hashtag-badge" onclick="searchHashtag('${item.tag}')" style="padding: 6px 12px; background: linear-gradient(135deg, rgba(220, 38, 38, 0.2) 0%, rgba(251, 191, 36, 0.1) 100%); border: 1px solid rgba(220, 38, 38, 0.3); border-radius: 20px; color: var(--primary); font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.3s; white-space: nowrap;">
+                                ${item.tag} <span style="opacity: 0.7;">${item.count}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
         function showTrending() {
             setActiveNav(3);
             document.getElementById('pageTitle').textContent = '🔥 Trending';
@@ -2427,6 +2502,7 @@
                     <button class="btn-trending" onclick="searchHashtag('${item.tag}')">Ver</button>
                 </div>
             `).join('');
+            renderHashtagsWidget();
         }
 
         function searchHashtag(hashtag) {
@@ -2435,6 +2511,7 @@
             searchQuery = hashtag.toLowerCase();
             renderPosts();
             showNotification(`Buscando por ${hashtag}`, 'info', 2000);
+            renderHashtagsWidget();
         }
 
         function showNotification(message, type = 'info', duration = 3000) {
