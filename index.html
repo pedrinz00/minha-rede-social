@@ -2158,6 +2158,21 @@
                     { id: 3, username: 'maria', password: '123', role: 'user', banned: false, joinDate: new Date().toISOString() },
                     { id: 4, username: 'ana', password: '123', role: 'user', banned: false, joinDate: new Date().toISOString() }
                 ];
+                
+                // Adicionar posts de exemplo com hashtags para a seção Trending
+                if (posts.length === 0) {
+                    const examplePosts = [
+                        { id: 101, authorId: 1, author: 'pedro', content: 'Explorando as novidades da #Tecnologia e #Inovação! 🚀', timestamp: new Date().toISOString(), likes: 5 },
+                        { id: 102, authorId: 2, author: 'joao', content: 'Nada melhor que um café e #Programação no domingo. ☕💻', timestamp: new Date().toISOString(), likes: 3 },
+                        { id: 103, authorId: 3, author: 'maria', content: 'Amo viajar e conhecer a #Natureza. #Viagem #Paz', timestamp: new Date().toISOString(), likes: 10 },
+                        { id: 104, authorId: 4, author: 'ana', content: 'Focada nos estudos de #JavaScript hoje! #DevLife', timestamp: new Date().toISOString(), likes: 7 },
+                        { id: 105, authorId: 1, author: 'pedro', content: 'A #Inovação não para nunca. Vamos pra cima! #Tecnologia', timestamp: new Date().toISOString(), likes: 4 },
+                        { id: 106, authorId: 2, author: 'joao', content: 'Dicas de #Programação são sempre bem-vindas.', timestamp: new Date().toISOString(), likes: 2 }
+                    ];
+                    posts = examplePosts;
+                    examplePosts.forEach(p => comments[p.id] = []);
+                }
+                
                 saveDataToStorage();
             }
         }
@@ -2487,21 +2502,39 @@
             const container = document.getElementById('trendingList');
             const trending = getTrendingTopics();
             
+            let html = '';
+            
             if (trending.length === 0) {
-                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📊</div><div class="empty-state-title">Nenhum trending ainda</div><div class="empty-state-text">Comece a usar hashtags nos seus posts!</div></div>';
-                return;
+                html += '<div class="empty-state"><div class="empty-state-icon">📊</div><div class="empty-state-title">Nenhum trending ainda</div><div class="empty-state-text">Comece a usar hashtags nos seus posts!</div></div>';
+            } else {
+                html += trending.map((item, index) => `
+                    <div class="trending-item" style="animation-delay: ${index * 0.05}s;">
+                        <div class="trending-rank">#${index + 1}</div>
+                        <div class="trending-info">
+                            <div class="trending-tag">${item.tag}</div>
+                            <div class="trending-count">${item.count} posts</div>
+                        </div>
+                        <button class="btn-trending" onclick="searchHashtag('${item.tag}')">Ver</button>
+                    </div>
+                `).join('');
             }
 
-            container.innerHTML = trending.map((item, index) => `
-                <div class="trending-item" style="animation-delay: ${index * 0.05}s;">
-                    <div class="trending-rank">#${index + 1}</div>
-                    <div class="trending-info">
-                        <div class="trending-tag">${item.tag}</div>
-                        <div class="trending-count">${item.count} posts</div>
+            // Adicionar seção de sugestões de hashtags
+            html += `
+                <div style="margin-top: 40px; padding: 20px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px dashed var(--border);">
+                    <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px; color: var(--text-light);">💡 Sugestões de Hashtags</h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                        ${['#Tecnologia', '#Programação', '#JavaScript', '#Inovação', '#DevLife', '#WebDesign', '#Natureza', '#Viagem', '#Paz', '#Saúde', '#Esportes', '#Música'].map(tag => `
+                            <button class="hashtag-badge" onclick="searchHashtag('${tag}')" style="padding: 8px 16px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 20px; color: var(--text-muted); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                                ${tag}
+                            </button>
+                        `).join('')}
                     </div>
-                    <button class="btn-trending" onclick="searchHashtag('${item.tag}')">Ver</button>
+                    <p style="margin-top: 12px; font-size: 11px; color: var(--text-muted);">Clique em uma hashtag para ver posts relacionados ou use-as em suas novas publicações!</p>
                 </div>
-            `).join('');
+            `;
+            
+            container.innerHTML = html;
             renderHashtagsWidget();
         }
 
