@@ -1106,6 +1106,82 @@
             margin: 0 auto;
         }
 
+        /* Trending */
+        .trending-container {
+            max-width: 900px;
+            margin: 0 auto;
+            animation: slideInUp 0.4s ease;
+        }
+
+        .trending-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .trending-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.3s;
+            animation: slideInUp 0.4s ease;
+            animation-fill-mode: both;
+        }
+
+        .trending-item:hover {
+            border-color: var(--primary);
+            box-shadow: 0 8px 24px rgba(220, 38, 38, 0.15);
+            transform: translateX(8px);
+        }
+
+        .trending-rank {
+            font-size: 20px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            min-width: 40px;
+        }
+
+        .trending-info {
+            flex: 1;
+            text-align: left;
+        }
+
+        .trending-tag {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .trending-count {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .btn-trending {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-trending:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(220, 38, 38, 0.3);
+        }
+
         .user-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -1556,6 +1632,164 @@
         ::-webkit-scrollbar-thumb:hover {
             background: var(--primary);
         }
+
+        /* Toast Notifications */
+        .toast {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            min-width: 300px;
+            max-width: 400px;
+            gap: 12px;
+            animation: slideInRight 0.3s ease;
+        }
+
+        .toast-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .toast-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .toast-message {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-light);
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 16px;
+            padding: 0;
+            transition: all 0.3s;
+        }
+
+        .toast-close:hover {
+            color: var(--primary);
+            transform: scale(1.2);
+        }
+
+        .toast-success {
+            border-left: 4px solid var(--success);
+        }
+
+        .toast-error {
+            border-left: 4px solid var(--danger);
+        }
+
+        .toast-warning {
+            border-left: 4px solid var(--warning);
+        }
+
+        .toast-info {
+            border-left: 4px solid var(--primary);
+        }
+
+        @keyframes slideOutRight {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(400px);
+            }
+        }
+
+        /* Modal Styles */
+        .profile-edit-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .profile-edit-modal.hidden {
+            display: none;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: slideInScale 0.4s ease;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-header h2 {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 0;
+        }
+
+        .modal-close:hover {
+            color: var(--primary);
+            transform: scale(1.2);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group small {
+            text-align: right;
+            font-size: 11px;
+        }
     </style>
 </head>
 <body>
@@ -1649,6 +1883,10 @@
                     <span class="nav-icon">👥</span>
                     <span>Usuários</span>
                 </button>
+                <button class="nav-link" onclick="showTrending()">
+                    <span class="nav-icon">🔥</span>
+                    <span>Trending</span>
+                </button>
                 <button class="nav-link" id="adminBtn" onclick="showAdmin()" style="display: none;">
                     <span class="nav-icon">⚙️</span>
                     <span>Admin</span>
@@ -1663,6 +1901,10 @@
                         <div class="user-mini-role" id="sidebarRole">Admin</div>
                     </div>
                 </div>
+                <button class="nav-link" onclick="toggleTheme()" title="Alternar Tema">
+                    <span class="nav-icon" id="themeIcon">🌙</span>
+                    <span>Tema</span>
+                </button>
                 <button class="btn-logout" onclick="logout()">🚪 Sair</button>
             </div>
         </div>
@@ -1705,6 +1947,31 @@
 
                 <!-- Profile Section -->
                 <div id="profileSection" class="hidden">
+                    <div class="profile-edit-modal hidden" id="profileEditModal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2>Editar Perfil</h2>
+                                <button class="modal-close" onclick="closeProfileEdit()">✕</button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label>Bio</label>
+                                    <textarea id="bioInput" placeholder="Conte algo sobre você..." maxlength="150" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: rgba(255,255,255,0.05); color: var(--text-light); font-family: inherit; resize: vertical; min-height: 80px;"></textarea>
+                                    <small style="color: var(--text-muted);" id="bioCount">0/150</small>
+                                </div>
+                                <div class="form-group">
+                                    <label>Status</label>
+                                    <input type="text" id="statusInput" placeholder="O que está fazendo?" maxlength="50" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: rgba(255,255,255,0.05); color: var(--text-light); font-family: inherit;">
+                                    <small style="color: var(--text-muted);" id="statusCount">0/50</small>
+                                </div>
+                                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                                    <button onclick="saveProfileChanges()" style="flex: 1; padding: 10px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">Salvar</button>
+                                    <button onclick="closeProfileEdit()" style="flex: 1; padding: 10px; background: rgba(255,255,255,0.1); color: var(--text-light); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-weight: 600;">Cancelar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="profileSection" class="hidden">
                     <div class="profile-container">
                         <div class="profile-header">
                             <div class="profile-avatar-large" id="profileAvatar">P</div>
@@ -1736,6 +2003,14 @@
                 <!-- Users Section -->
                 <div id="usersSection" class="hidden">
                     <div class="users-container" id="usersContainer"></div>
+
+                <!-- Trending Section -->
+                <div id="trendingSection" class="hidden">
+                    <div class="trending-container">
+                        <h1 style="margin-bottom: 24px; font-size: 24px; font-weight: 700;">🔥 Assuntos do Momento</h1>
+                        <div class="trending-list" id="trendingList"></div>
+                    </div>
+                </div>
                 </div>
 
                 <!-- Admin Section -->
@@ -1791,6 +2066,9 @@
         let follows = {}; // Sistema de seguir: { userId-followingId: true }
         let logs = [];
         let searchQuery = '';
+        let isDarkMode = true;
+        let notifications = [];
+        let userProfiles = {}; // { userId: { bio, status } }
 
         document.getElementById('userLoginForm').addEventListener('submit', (e) => login(e, 'user'));
         document.getElementById('adminLoginForm').addEventListener('submit', (e) => login(e, 'admin'));
@@ -1830,15 +2108,19 @@
                 reactions = data.reactions || {};
                 comments = data.comments || {};
                 follows = data.follows || {};
+                userProfiles = data.userProfiles || {};
             }
             const storedLogs = localStorage.getItem(LOGS_KEY);
             if (storedLogs) logs = JSON.parse(storedLogs);
+            const themeMode = localStorage.getItem('theme_mode');
+            if (themeMode) isDarkMode = themeMode === 'dark';
         }
 
         function saveDataToStorage() {
-            const data = { users, posts, likes, reactions, comments, follows };
+            const data = { users, posts, likes, reactions, comments, follows, userProfiles };
             localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
             localStorage.setItem(LOGS_KEY, JSON.stringify(logs));
+            localStorage.setItem('theme_mode', isDarkMode ? 'dark' : 'light');
         }
 
         function initializeDefaultData() {
@@ -1933,6 +2215,7 @@
             document.getElementById('feedSection').classList.add('hidden');
             document.getElementById('profileSection').classList.add('hidden');
             document.getElementById('usersSection').classList.add('hidden');
+            document.getElementById('trendingSection').classList.add('hidden');
             document.getElementById('adminSection').classList.add('hidden');
             document.getElementById('feedSearch-container').style.display = 'none';
             searchQuery = '';
@@ -2095,6 +2378,173 @@
             }
         }
 
+        // ==================== NOTIFICATIONS ====================
+        // ==================== TRENDING ====================
+        function getTrendingTopics() {
+            const hashtags = {};
+            posts.forEach(post => {
+                const matches = post.content.match(/#\w+/g);
+                if (matches) {
+                    matches.forEach(tag => {
+                        hashtags[tag] = (hashtags[tag] || 0) + 1;
+                    });
+                }
+            });
+            
+            return Object.entries(hashtags)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 10)
+                .map(([tag, count]) => ({ tag, count }));
+        }
+
+        function showTrending() {
+            setActiveNav(3);
+            document.getElementById('pageTitle').textContent = '🔥 Trending';
+            document.getElementById('feedSearch-container').style.display = 'none';
+            hideAllSections();
+            document.getElementById('trendingSection').classList.remove('hidden');
+            renderTrending();
+        }
+
+        function renderTrending() {
+            const container = document.getElementById('trendingList');
+            const trending = getTrendingTopics();
+            
+            if (trending.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📊</div><div class="empty-state-title">Nenhum trending ainda</div><div class="empty-state-text">Comece a usar hashtags nos seus posts!</div></div>';
+                return;
+            }
+
+            container.innerHTML = trending.map((item, index) => `
+                <div class="trending-item" style="animation-delay: ${index * 0.05}s;">
+                    <div class="trending-rank">#${index + 1}</div>
+                    <div class="trending-info">
+                        <div class="trending-tag">${item.tag}</div>
+                        <div class="trending-count">${item.count} posts</div>
+                    </div>
+                    <button class="btn-trending" onclick="searchHashtag('${item.tag}')">Ver</button>
+                </div>
+            `).join('');
+        }
+
+        function searchHashtag(hashtag) {
+            showFeed();
+            document.getElementById('feedSearch').value = hashtag;
+            searchQuery = hashtag.toLowerCase();
+            renderPosts();
+            showNotification(`Buscando por ${hashtag}`, 'info', 2000);
+        }
+
+        function showNotification(message, type = 'info', duration = 3000) {
+            const notification = document.createElement('div');
+            notification.className = `toast toast-${type}`;
+            notification.innerHTML = `
+                <div class="toast-content">
+                    <span class="toast-icon">${getToastIcon(type)}</span>
+                    <span class="toast-message">${message}</span>
+                </div>
+                <button class="toast-close" onclick="this.parentElement.remove()">✕</button>
+            `;
+            
+            const container = document.getElementById('toast-container') || createToastContainer();
+            container.appendChild(notification);
+            
+            notification.style.animation = 'slideInRight 0.3s ease';
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, duration);
+        }
+
+        function createToastContainer() {
+            const container = document.createElement('div');
+            container.id = 'toast-container';
+            container.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;';
+            document.body.appendChild(container);
+            return container;
+        }
+
+        function getToastIcon(type) {
+            const icons = {
+                'success': '✅',
+                'error': '❌',
+                'warning': '⚠️',
+                'info': 'ℹ️'
+            };
+            return icons[type] || '📢';
+        }
+
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            const root = document.documentElement;
+            if (!isDarkMode) {
+                // Modo claro
+                root.style.setProperty('--bg-darker', '#f5f5f5');
+                root.style.setProperty('--bg-dark', '#ffffff');
+                root.style.setProperty('--bg-card', '#ffffff');
+                root.style.setProperty('--text-light', '#1a1a1a');
+                root.style.setProperty('--text-muted', '#666666');
+                root.style.setProperty('--border', '#e0e0e0');
+            } else {
+                // Modo escuro
+                root.style.setProperty('--bg-darker', '#050505');
+                root.style.setProperty('--bg-dark', '#0a0a0a');
+                root.style.setProperty('--bg-card', '#1a1a1a');
+                root.style.setProperty('--text-light', '#f5f5f5');
+                root.style.setProperty('--text-muted', '#a0a0a0');
+                root.style.setProperty('--border', '#2a2a2a');
+            }
+            saveDataToStorage();
+            showNotification(`Modo ${isDarkMode ? 'Escuro' : 'Claro'} ativado`, 'success', 2000);
+        }
+
+
+        // ==================== PROFILE EDITING ====================
+        function openProfileEdit() {
+            const profile = userProfiles[currentUser.id] || { bio: '', status: '' };
+            document.getElementById('bioInput').value = profile.bio || '';
+            document.getElementById('statusInput').value = profile.status || '';
+            document.getElementById('profileEditModal').classList.remove('hidden');
+            updateCharCounts();
+        }
+
+        function closeProfileEdit() {
+            document.getElementById('profileEditModal').classList.add('hidden');
+        }
+
+        function saveProfileChanges() {
+            const bio = document.getElementById('bioInput').value.trim();
+            const status = document.getElementById('statusInput').value.trim();
+            
+            if (!userProfiles[currentUser.id]) {
+                userProfiles[currentUser.id] = {};
+            }
+            
+            userProfiles[currentUser.id].bio = bio;
+            userProfiles[currentUser.id].status = status;
+            
+            saveDataToStorage();
+            closeProfileEdit();
+            renderProfile();
+            showNotification('Perfil atualizado com sucesso! ✨', 'success', 2000);
+        }
+
+        function updateCharCounts() {
+            const bio = document.getElementById('bioInput').value;
+            const status = document.getElementById('statusInput').value;
+            document.getElementById('bioCount').textContent = `${bio.length}/150`;
+            document.getElementById('statusCount').textContent = `${status.length}/50`;
+        }
+
+        // Adicionar event listeners para contadores
+        document.addEventListener('DOMContentLoaded', () => {
+            const bioInput = document.getElementById('bioInput');
+            const statusInput = document.getElementById('statusInput');
+            if (bioInput) bioInput.addEventListener('input', updateCharCounts);
+            if (statusInput) statusInput.addEventListener('input', updateCharCounts);
+        });
+
         function addComment(postId) {
             const input = document.getElementById(`comment-input-${postId}`);
             const text = input.value.trim();
@@ -2186,6 +2636,12 @@
             document.getElementById('profileAvatar').textContent = avatar;
             document.getElementById('profileUsername').textContent = currentUser.username;
             document.getElementById('profileRole').textContent = currentUser.role === 'admin' ? 'Administrador' : 'Usuário';
+            
+            const profile = userProfiles[currentUser.id] || { bio: '', status: '' };
+            const bioElement = document.getElementById('profileBio');
+            const statusElement = document.getElementById('profileStatus');
+            if (bioElement) bioElement.textContent = profile.bio || 'Nenhuma bio adicionada';
+            if (statusElement) statusElement.textContent = profile.status || 'Sem status';
             
             const userPosts = posts.filter(p => p.authorId === currentUser.id);
             document.getElementById('profilePostCount').textContent = userPosts.length;
