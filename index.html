@@ -1971,13 +1971,15 @@
                             </div>
                         </div>
                     </div>
-                    <div id="profileSection" class="hidden">
                     <div class="profile-container">
                         <div class="profile-header">
                             <div class="profile-avatar-large" id="profileAvatar">P</div>
                             <div class="profile-info">
                                 <div class="profile-username" id="profileUsername">pedro</div>
                                 <div class="profile-role" id="profileRole">Administrador</div>
+                                <div class="profile-bio" id="profileBio" style="margin-top: 8px; font-size: 12px; color: var(--text-muted); max-width: 300px;">Nenhuma bio adicionada</div>
+                                <div class="profile-status" id="profileStatus" style="margin-top: 4px; font-size: 11px; color: var(--text-muted);">Sem status</div>
+                                <button class="btn-edit-profile" onclick="openProfileEdit()" style="margin-top: 12px; padding: 10px 16px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 12px; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">✏️ Editar Perfil</button>
                                 <div class="profile-stats">
                                     <div class="stat-item">
                                         <div class="stat-number" id="profilePostCount">0</div>
@@ -2003,6 +2005,7 @@
                 <!-- Users Section -->
                 <div id="usersSection" class="hidden">
                     <div class="users-container" id="usersContainer"></div>
+                </div>
 
                 <!-- Trending Section -->
                 <div id="trendingSection" class="hidden">
@@ -2010,7 +2013,6 @@
                         <h1 style="margin-bottom: 24px; font-size: 24px; font-weight: 700;">🔥 Assuntos do Momento</h1>
                         <div class="trending-list" id="trendingList"></div>
                     </div>
-                </div>
                 </div>
 
                 <!-- Admin Section -->
@@ -2617,6 +2619,7 @@
         function showFeed() {
             setActiveNav(0);
             document.getElementById('pageTitle').textContent = '📰 Feed';
+            document.getElementById('feedSearch-container').style.display = 'block';
             hideAllSections();
             document.getElementById('feedSection').classList.remove('hidden');
             renderPosts();
